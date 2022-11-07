@@ -1,8 +1,11 @@
 function setup() {
-	createCanvas(windowWidth, windowHeight);
-	// put setup code here
+  createCanvas(400, 800);
+  noLoop();
+  //branches()
+  //endOfBranch = branches()
+  //flower(posx, posy)
 }
 
 function draw() {
-	// put drawing code here
+  drawBranches()
 }
