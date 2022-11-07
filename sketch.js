@@ -1,3 +1,6 @@
+let seedNature = 124083202394
+let seedNurture = 98524389
+
 function setup() {
   createCanvas(400, 800);
   noLoop();

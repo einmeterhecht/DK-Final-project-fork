@@ -19,6 +19,27 @@ let rules = {
   'F': 'FF'
 }
 
+function generateRandomRuleX() {
+  let generatedNewRule = '';
+  randomSeed(seedNature);
+  let r = floor(random(10))
+  for (i = 0; i < r; i++) {
+    generatedNewRule += grammar[floor(random(1, 6))]
+  }
+  return (generatedNewRule)
+}
+
+let grammar = {
+  1: 'F',
+  2: 'X',
+  3: '+',
+  4: '-',
+  5: '[',
+  6: ']'
+}
+
+
+
 function mouseReleased() {
   sentence = generateSentence();
   console.log(sentence)
@@ -32,14 +53,6 @@ let drawRules = {
   'F': () => {
     line(0, 0, 0, -len)
     translate(0, -len)
-    fill(255 + random(-50, 50), 64 + random(-50, 50), 155 + random(-50, 50))
-    push()
-    noStroke()
-    let r = random()
-    if (r < 0.1) {
-      ellipse(0, -len, random(8), random(8))
-    }
-    pop()
   },
   '+': () => {
     rotate(PI / 180 * ang)
@@ -53,6 +66,14 @@ let drawRules = {
     push()
   },
   ']': () => {
+    pop()
+    fill(255 + random(-50, 50), 64 + random(-50, 50), 155 + random(-50, 50))
+    push()
+    noStroke()
+    let r = random()
+    if (r < 0.1) {
+      ellipse(0, -len, random(8), random(8))
+    }
     pop()
   }
 }
