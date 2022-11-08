@@ -1,6 +1,6 @@
 let sentence = 'X'
 
-function generateSentence() {
+function generateSentence() { //generates a new sentence based on the rules
   let nextSentence = ''
   for (i = 0; i < sentence.length; i++) {
     let current = sentence.charAt(i)
@@ -14,7 +14,7 @@ function generateSentence() {
   return (nextSentence)
 }
 
-function generateRandomRuleX(seedNature) {
+function generateRandomRuleX(seedNature) { //generates a rule
   let generatedNewRule = 'F[-]F[+]'; //insert random sentence at pos 3,7,9
   let inserts = ['', '', ''];
   randomSeed(seedNature);
@@ -44,7 +44,7 @@ function generateRandomRuleX(seedNature) {
   return (generatedNewRule)
 }
 
-let grammar = {
+let grammar = { //the grammar from which the rule can be composed from, added some letters more for higher chances to be picked
   1: 'F',
   6: 'X',
   2: 'X',
@@ -57,7 +57,7 @@ let grammar = {
 }
 
 let rules = {
-  'X': 'F[-X]F[+X]X[+X]X', //should be inserted by generateRandomRuleX
+  'X': 'F[-XXXF+XX+][+X[FFX+[X]]]A[[+FA][+X-F]]XA', //should be inserted from generateRandomRuleX
   'F': 'FF'
 }
 
@@ -68,23 +68,25 @@ function mouseReleased() {
   draw()
 }
 
-let len = 3;
-let ang = 17;
+let len = 5;
+let ang = 3;
 
 
 let drawRules = {
   'F': () => {
-    line(0, 0, 0, -len + (random(-0.3 * len, 0.3 * len)))
-    translate(0, -len + (random(-0.3 * len, 0.3 * len)))
+    stroke(0, 0, 0, 0.5)
     rotate(random(-PI / 120, PI / 120))
+    line(0, 0, 0, -len + (random(-0.3 * len, 0.3 * len)))
+    translate(0, -len + (random(0, 0.3 * len)))
   },
   '+': () => {
     rotate(PI / 180 * ang)
-    rotate(random(-PI / 20, PI / 20))
+    rotate(random(PI / 180 * (ang * 0.3), -PI / 180 * (ang * 0.3)))
+    stroke
   },
   '-': () => {
     rotate(PI / 180 * (-ang))
-    rotate(random(-PI / 20, PI / 20))
+    rotate(random(PI / 180 * (ang * 0.3), -PI / 180 * (ang * 0.3)))
   },
   '[': () => {
     push()
@@ -92,13 +94,20 @@ let drawRules = {
   ']': () => {
     pop()
     fill(255 + random(-50, 50), 64 + random(-50, 50), 155 + random(-50, 50))
+  },
+  'A': () => {
     push()
-    noStroke()
     let r = random(1)
     if (r < 0.01) {
-      ellipse(0, -len, random(15, 30), random(15, 30))
+      ellipse(0, -len, random(5, 15), random(5, 15))
     }
     pop()
+  },
+  'B': () => {
+    fruit()
+  },
+  'C': () => {
+    leave()
   }
 }
 
@@ -106,8 +115,9 @@ let iteration = 1;
 
 function drawBranches() {
   push();
-  strokeWeight(10 / (1.05 * iteration))
-  translate(200, 700)
+  strokeWeight(10 / (1.30 * iteration))
+  ang = ang + (((iteration) ^ 2) / 5)
+  translate(400, 700)
   for (i = 0; i < sentence.length; i++) {
     if (sentence.charAt(i) in drawRules) {
       drawRules[sentence.charAt(i)]()
