@@ -14,19 +14,32 @@ function generateSentence() {
   return (nextSentence)
 }
 
-let rules = {
-  'X': 'F+[[X]-X]-F[-FX]+X',
-  'F': 'FF'
-}
-
 function generateRandomRuleX() {
   let generatedNewRule = '';
   randomSeed(seedNature);
-  let r = floor(random(10))
+  let c;
+  let bracketCount = 0;
+  let r = floor(random(10, 30))
   for (i = 0; i < r; i++) {
-    generatedNewRule += grammar[floor(random(1, 6))]
+    c = grammar[floor(random(1, 6))]
+    if (c == '[') {
+      bracketCount += 1
+    } else {
+      generatedNewRule += c
+    }
+  }
+  for (j = 0; j < bracketCount; j++) {
+    rp = random(generatedNewRule.length)
+    pd = random(generatedNewRule.length - rp)
+    generatedNewRule = generatedNewRule.slice(0, rp) + '[' + generatedNewRule.slice(rp);
+    generatedNewRule = generatedNewRule.slice(0, rp + pd) + ']' + generatedNewRule.slice(rp + pd);
   }
   return (generatedNewRule)
+}
+
+let rules = {
+  'X': 'F[-XX[]+][+XX[X]-][X[]]X',
+  'F': 'FF'
 }
 
 let grammar = {
@@ -38,16 +51,14 @@ let grammar = {
   6: ']'
 }
 
-
-
 function mouseReleased() {
   sentence = generateSentence();
   console.log(sentence)
   draw()
 }
 
-let len = 1;
-let ang = 25
+let len = 50;
+let ang = 25;
 
 let drawRules = {
   'F': () => {
@@ -56,11 +67,11 @@ let drawRules = {
   },
   '+': () => {
     rotate(PI / 180 * ang)
-    rotate(random(-PI / 8, PI / 8))
+    //rotate(random(-PI / 8, PI / 8))
   },
   '-': () => {
     rotate(PI / 180 * (-ang))
-    rotate(random(-PI / 8, PI / 8))
+    //rotate(random(-PI / 8, PI / 8))
   },
   '[': () => {
     push()
@@ -80,11 +91,12 @@ let drawRules = {
 
 function drawBranches() {
   push();
-  translate(100, 800)
+  translate(200, 800)
   for (i = 0; i < sentence.length; i++) {
     if (sentence.charAt(i) in drawRules) {
       drawRules[sentence.charAt(i)]()
     }
   }
   pop();
+  len = len * 0.6
 }
